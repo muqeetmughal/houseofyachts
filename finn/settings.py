@@ -30,7 +30,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django_crontab',
     'webapp.apps.WebappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
