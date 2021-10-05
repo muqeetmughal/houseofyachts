@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import Spinner from './Spinner'
 import Content from './Content'
 import {useHistory} from 'react-router-dom'
-import home_url from './Home'
+// import home_url from './Home'
 function Details({ match }) {
     const history = useHistory();
     const finn_code = match.params.finn_code
@@ -29,7 +29,8 @@ function Details({ match }) {
     return (
         
         <div className="container" style={{marginTop: 10}}>
-            <button onClick={() => history.goBack()} className="btn btn-primary">Back</button>
+            <button onClick={() => history.goBack()} className="btn btn-primary mb-4">Back</button>
+
             {loading ?<Content data={data} />: <Spinner />}
         </div>
     )

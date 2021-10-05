@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 
 import Table from "./Table";
 import Spinner from './Spinner'
+import { isExpired } from "./ExpiryCheck";
 
+import { Redirect } from "react-router";
 function Home() {
+
+
     const [data, setData] = useState({});
     const [pages, setPages] = useState({ "total_records": 0, "current_page": 1, "previous_page": 0, "next_page": 0, "total_pages": 0 });
     const [loading, setLoading] = useState(false);
@@ -45,7 +49,7 @@ function Home() {
     useEffect(() => {
         document.title = `Finn-Page:${pages.current_page}`
         getData();
-        
+
     }, [url]);
 
 
@@ -55,7 +59,7 @@ function Home() {
         const dataOutput = await response.json();
         setData(dataOutput.records);
         setPages({ "total_records": dataOutput.total_records, "current_page": dataOutput.current_page, "previous_page": dataOutput.previous_page, "next_page": dataOutput.next_page, "total_pages": dataOutput.total_pages })
-        
+
         setLoading(true)
     };
     function handleChange(event) {
@@ -63,8 +67,8 @@ function Home() {
         const inputValue = event.target.name;
 
 
-        setFilters((prevValue)=>{
-            if (inputValue === "title"){
+        setFilters((prevValue) => {
+            if (inputValue === "title") {
                 return {
                     'finn_code': prevValue.finn_code,
                     'title': newValue,
@@ -95,7 +99,7 @@ function Home() {
                     'status': prevValue.status,
                 }
             }
-            else if (inputValue === "finn_code"){
+            else if (inputValue === "finn_code") {
                 return {
                     'finn_code': newValue,
                     'title': prevValue.title,
@@ -126,7 +130,7 @@ function Home() {
                     'status': prevValue.status,
                 }
             }
-            else if (inputValue === "status"){
+            else if (inputValue === "status") {
                 return {
                     'finn_code': prevValue.finn_code,
                     'title': prevValue.title,
@@ -157,7 +161,7 @@ function Home() {
                     'status': newValue,
                 }
             }
-            else if (inputValue === "description"){
+            else if (inputValue === "description") {
                 return {
                     'finn_code': prevValue.finn_code,
                     'title': prevValue.title,
@@ -188,9 +192,9 @@ function Home() {
                     'status': prevValue.status,
                 }
             }
-            
+
         })
-        
+
 
     }
     function setURLfromFiltersState() {
@@ -208,6 +212,10 @@ function Home() {
         await fetch(`/api/delete/${finn_code}`);
         getData();
         console.log("Deleted", finn_code)
+    }
+    const is_expired = isExpired()
+    if (is_expired) {
+        return <Redirect to="/login" />
     }
 
     return (
@@ -302,50 +310,50 @@ function Home() {
 
 
             <div className="container mt-4 mb-4">
-            <div className="d-flex input-group w-auto">
-                <input
-                    type="text"
-                    name="finn_code"
-                    onChange={handleChange}
-                    value={filters.finn_code}
-                    className="form-control"
-                    placeholder="Search Finn Code"
-                    aria-label="Search"
-                />
-                <input
-                    type="text"
-                    name="title"
-                    onChange={handleChange}
-                    value={filters.title}
-                    className="form-control"
-                    placeholder="Search Title"
-                    aria-label="Search"
-                />
-                <input
-                    type="text"
-                    name="description"
-                    onChange={handleChange}
-                    value={filters.description}
-                    className="form-control"
-                    placeholder="Search in Description"
-                    aria-label="Search"
-                />
-                <input
-                    type="text"
-                    name="status"
-                    onChange={handleChange}
-                    value={filters.status}
-                    className="form-control"
-                    placeholder="Search Status"
-                    aria-label="Search"
-                />
-                <button onClick={setURLfromFiltersState} className="btn btn-primary">
-                    Search
-                </button>
-            </div>
+                <div className="d-flex input-group w-auto">
+                    <input
+                        type="text"
+                        name="finn_code"
+                        onChange={handleChange}
+                        value={filters.finn_code}
+                        className="form-control"
+                        placeholder="Search Finn Code"
+                        aria-label="Search"
+                    />
+                    <input
+                        type="text"
+                        name="title"
+                        onChange={handleChange}
+                        value={filters.title}
+                        className="form-control"
+                        placeholder="Search Title"
+                        aria-label="Search"
+                    />
+                    <input
+                        type="text"
+                        name="description"
+                        onChange={handleChange}
+                        value={filters.description}
+                        className="form-control"
+                        placeholder="Search in Description"
+                        aria-label="Search"
+                    />
+                    <input
+                        type="text"
+                        name="status"
+                        onChange={handleChange}
+                        value={filters.status}
+                        className="form-control"
+                        placeholder="Search Status"
+                        aria-label="Search"
+                    />
+                    <button onClick={setURLfromFiltersState} className="btn btn-primary">
+                        Search
+                    </button>
+                </div>
             </div>
 
-            {loading ? <Table data={data} onDelete={onDelete} /> : <Spinner/>}
+            {loading ? <Table data={data} onDelete={onDelete} /> : <Spinner />}
 
         </div>
     );
