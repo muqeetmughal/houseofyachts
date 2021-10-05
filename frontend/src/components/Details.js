@@ -8,14 +8,21 @@ function Details({ match }) {
     const finn_code = match.params.finn_code
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
+    const [access_token,setAccessToken] = useState(localStorage.getItem("access"))
     // const [url, setURL] = useState(`http://127.0.0.1:8000/api/detail/${finn_code}`);
     const url = `/api/detail/${finn_code}`
 
     // console.log(url)
 
+    
     const getData = async () => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${access_token}`},
+        };
         setLoading(false)
-        const response = await fetch(url);
+        const response = await fetch(url, requestOptions);
         const data = await response.json();
         setData(data);
         console.log(data)

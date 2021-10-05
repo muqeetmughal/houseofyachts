@@ -2,8 +2,10 @@ from django.shortcuts import render,HttpResponse
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework import filters
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from webapp.models import Listing, Price_History
 from .serializers import ListingSerializer, PriceSerializer
 from webapp.filters import ListingFilter
@@ -28,7 +30,9 @@ def start_scraper(request):
     return Response("Today Scrape Completed")
 
 
-@api_view(['DELETE','GET'])
+@api_view(['DELETE'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def delete(request,code):
     Details = Listing.objects.get(finn_code=code)
     Details.delete()
@@ -38,6 +42,8 @@ def delete(request,code):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def listings(request):
     listing = Listing.objects.all().order_by("last_updated")
     
@@ -90,6 +96,8 @@ def listings(request):
     return Response(output)
 
 @api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def detail(request,code):
     try:
         scrape = FinnScraper()

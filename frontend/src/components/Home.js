@@ -11,7 +11,8 @@ function Home() {
     const [data, setData] = useState({});
     const [pages, setPages] = useState({ "total_records": 0, "current_page": 1, "previous_page": 0, "next_page": 0, "total_pages": 0 });
     const [loading, setLoading] = useState(false);
-
+    const [access_token,setAccessToken] = useState(localStorage.getItem("access"))
+    const [is_expired, set_is_expired] = useState(isExpired())
     const [filters, setFilters] = useState(
         {
             'finn_code': '',
@@ -54,8 +55,13 @@ function Home() {
 
 
     const getData = async () => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${access_token}`},
+        };
         setLoading(false)
-        const response = await fetch(url);
+        const response = await fetch(url, requestOptions);
         const dataOutput = await response.json();
         setData(dataOutput.records);
         setPages({ "total_records": dataOutput.total_records, "current_page": dataOutput.current_page, "previous_page": dataOutput.previous_page, "next_page": dataOutput.next_page, "total_pages": dataOutput.total_pages })
@@ -209,14 +215,20 @@ function Home() {
         setURL(`/api/listings/?page=${pages.previous_page}&finn_code=${filters.finn_code}&title=${filters.title}&description=${filters.description}&Boat_location=${filters.boat_location}&State=${filters.state}&Type=${filters.type}&Brand=${filters.brand}&Model=${filters.model}&Model_Year=${filters.model_year}&Length_feet=${filters.length_feet}&Length_cm=${filters.length_cm}&Width=${filters.width}&Depth=${filters.depth}&Engine_Included=${filters.engine_included}&Engine_Manufacturer=${filters.engine_manufacturer}&Engine_Type=${filters.engine_type}&Motorstr=${filters.modelstr}&Max_Speed=${filters.max_speed}&Fuel=${filters.fuel}&Weight=${filters.weight}&Material=${filters.material}&Color=${filters.color}&Seating=${filters.seating}&Sleeps=${filters.sleeps}&orignal_price=${filters.price}&image=&last_updated=${filters.last_updated}&status=${filters.status}`)
     }
     const onDelete = async (finn_code) => {
-        await fetch(`/api/delete/${finn_code}`);
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${access_token}`},
+        };
+        await fetch(`/api/delete/${finn_code}`,requestOptions);
         getData();
-        console.log("Deleted", finn_code)
+
     }
-    const is_expired = isExpired()
     if (is_expired) {
         return <Redirect to="/login" />
     }
+
+    
 
     return (
         <div className="Home">
@@ -301,9 +313,18 @@ function Home() {
                                         <i className="fas fa-chevron-right"></i>
                                     </button>
                                 </li>
+
+                                <li className="page-item ml-3">
+                                    {is_expired?"":<button className="btn btn-warning" onClick={()=>{localStorage.removeItem('access');localStorage.removeItem("refresh");set_is_expired(true)}}>Logout</button>}
+
+                                </li>
+
                             </ul>
 
+                            
                         </div>
+
+                        
                     </div>
                 </nav>
             </header>
