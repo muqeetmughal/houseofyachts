@@ -25,7 +25,7 @@ SECRET_KEY = 'yfa(zcg8-gh^186@y96qmx0k6ebranywn!1*hyv9b*+xv!l%qj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['167.172.47.247']
 
 # Application definition
 
