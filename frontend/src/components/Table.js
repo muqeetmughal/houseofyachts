@@ -20,7 +20,7 @@ function Table({ data,onDelete }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(row => (
+                    {data && data.map(row => (
                         <tr key={row.finn_code}>
                             <td>{row.finn_code}</td>
                             <td>{row.title}</td>
