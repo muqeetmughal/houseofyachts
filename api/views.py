@@ -12,7 +12,7 @@ from webapp.filters import ListingFilter
 from webapp.finn_v3 import FinnScraper
 from rest_framework import generics
 import csv
-
+from rest_framework.authentication import SessionAuthentication
 @api_view(['GET'])
 def apiOverview(request):
     api_urls = {
@@ -31,7 +31,7 @@ def start_scraper(request):
 
 
 @api_view(['DELETE'])
-@authentication_classes([JWTAuthentication])
+@authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def delete(request,code):
     Details = Listing.objects.get(finn_code=code)
@@ -42,7 +42,7 @@ def delete(request,code):
 
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])
+@authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def listings(request):
     listing = Listing.objects.all().order_by("last_updated")
@@ -96,7 +96,7 @@ def listings(request):
     return Response(output)
 
 @api_view(['GET'])
-@authentication_classes([JWTAuthentication])
+@authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def detail(request,code):
     try:
@@ -117,6 +117,8 @@ def detail(request,code):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def export_to_csv(request):
     response = HttpResponse(content_type='text/csv')
 

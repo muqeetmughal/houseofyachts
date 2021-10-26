@@ -82,21 +82,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'finn.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'finn_django_new',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -108,8 +93,8 @@ DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'sindre',
-#         'USER': 'sindre',
-#         'PASSWORD': 'Sindre@123',
+#         'USER': 'root',
+#         'PASSWORD': '123412341234',
 #         'HOST': 'localhost',
 #         'PORT': '3306',
 #     }
@@ -173,9 +158,11 @@ CORS_ORIGIN_WHITELIST = [
 #mysql> create user 'sindre'@'localhost' identified by 'Sindre@123';
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
 }
+
 
 # Django project settings.py
 

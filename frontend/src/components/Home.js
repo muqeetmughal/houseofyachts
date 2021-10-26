@@ -11,8 +11,8 @@ function Home() {
     const [data, setData] = useState({});
     const [pages, setPages] = useState({ "total_records": 0, "current_page": 1, "previous_page": 0, "next_page": 0, "total_pages": 0 });
     const [loading, setLoading] = useState(false);
-    const [access_token,setAccessToken] = useState(localStorage.getItem("access"))
-    const [is_expired, set_is_expired] = useState(isExpired())
+    // const [access_token,setAccessToken] = useState(localStorage.getItem("access"))
+    // const [is_expired, set_is_expired] = useState(isExpired())
     const [filters, setFilters] = useState(
         {
             'finn_code': '',
@@ -56,9 +56,7 @@ function Home() {
 
     const getData = async () => {
         const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${access_token}`},
+            method: 'GET'
         };
         setLoading(false)
         const response = await fetch(url, requestOptions);
@@ -216,17 +214,15 @@ function Home() {
     }
     const onDelete = async (finn_code) => {
         const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${access_token}`},
+            method: 'DELETE'
         };
         await fetch(`/api/delete/${finn_code}`,requestOptions);
         getData();
 
     }
-    if (is_expired) {
-        return <Redirect to="/login" />
-    }
+    // if (is_expired) {
+    //     return <Redirect to="/login" />
+    // }
 
     
 
@@ -314,10 +310,7 @@ function Home() {
                                     </button>
                                 </li>
 
-                                <li className="page-item ml-3">
-                                    {is_expired?"":<button className="btn btn-warning" onClick={()=>{localStorage.removeItem('access');localStorage.removeItem("refresh");set_is_expired(true)}}>Logout</button>}
-
-                                </li>
+                                
 
                             </ul>
 
